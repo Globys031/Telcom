@@ -11,11 +11,12 @@ from sklearn.ensemble import IsolationForest
 import matplotlib.pyplot as plt
 
 ##### Additional files
-import anomalyDetection
+from AnomalyDetection import anomalyDetection
 
 
 ###### Sample input, change later.
 random.seed(3)
 X, _ = make_blobs(n_samples=300, centers=1, cluster_std=.3, center_box=(20, 5))
-anomalyDetection.drawAnomalyGraph(X, _)
+print(X)
+# anomalyDetection.drawAnomalyGraph(X, _)
 ######
