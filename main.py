@@ -18,5 +18,5 @@ from AnomalyDetection import anomalyDetection
 random.seed(3)
 X, _ = make_blobs(n_samples=300, centers=1, cluster_std=.3, center_box=(20, 5))
 print(X)
-# anomalyDetection.drawAnomalyGraph(X, _)
+anomalyDetection.drawAnomalyGraph(X, _)
 ######
