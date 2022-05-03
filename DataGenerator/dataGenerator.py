@@ -1,43 +1,64 @@
 import random
 from datetime import datetime, timezone, timedelta
 import datetime as dt
+import pandas as pd
 
-startYear = 2022
-startMonth = 2
-startDay = 15
-zone = 3
+def randomData():
+    startYear = 2022
+    startMonth = 2
+    startDay = 15
+    zone = 3
 
-numOfDaysToGenerateData = 20
-generateRandomDate = False;
+    numOfDaysToGenerateData = 20
+    generateRandomDate = False;
 
-date = dt.date(startYear, startMonth, startDay)
+    date = dt.date(startYear, startMonth, startDay)
 
-bytes = [246, 210]
-LOC = [9321, 8138, 8193]
+    bytes = [246,210]
+    LAC = [9321,8138,8193]
 
-# Generate date
-for i in range(numOfDaysToGenerateData):
+    df = pd.DataFrame()
+    # Initialize empty dataframe
+    for column in [ "time", "bytes", "last_location", "travel_distance", "LAC" ]:
+        df[column] = ""
+
     # generate random time of the day
     hour = 1
     previousDate = -1
-    while hour < 24:
-        min = 0
-        while min < 59:
-            sec = 0
-            while sec < 59:
-                fullDate = dt.datetime(date.year, date.month, date.day,
-                                       hour, min, sec, tzinfo=timezone(timedelta(hours=zone)))
 
-                if previousDate == -1:
-                    dateDiff = 0
-                else:
-                    dateDiff = fullDate - previousDate
+    # Generate date
+    for i in range(numOfDaysToGenerateData):
+        # generate random time of the day
+        hour = 1
+        previousDate = -1
+        while hour < 24:
+            min = 0
+            while min < 59:
+                sec = 0
+                while sec < 59:
+                    fullDate = dt.datetime(date.year, date.month, date.day,
+                                           hour, min, sec, tzinfo=timezone(timedelta(hours=zone)))
 
-                distance = random.randint(1, 14)
-                print(str(fullDate.strftime("%Y-%m-%dT%H:%M:%S%z"))+";"+str(random.choice(bytes)
-                                                                            )+";"+str(dateDiff)+";"+str(distance)+";"+str(random.choice(LOC)))
-                previousDate = fullDate
-                sec = random.randint(sec+1, 60)
-            min = random.randint(min+1, 60)
-        hour = random.randint(hour+1, 24)
-    date = date + timedelta(days=1)
+                    if previousDate == -1:
+                        dateDiff = 0
+                    else:
+                        dateDiff = fullDate - previousDate   
+
+                    distance=random.randint(1,14)
+
+                    # If possible we'll group data by the minute (look at "time" column).
+                    df = df.append({'time' : min + hour * 60, 
+                                    'bytes' : random.choice(bytes), 
+                                    'last_location' : int(dateDiff.total_seconds()),  
+                                    'travel_distance' : distance,  
+                                    'LAC' : random.choice(LAC), }, ignore_index = True)
+
+                    #print(str(fullDate.strftime("%Y-%m-%dT%H:%M:%S%z"))+";"+str(random.choice(bytes)
+                                                                                )+";"+str(dateDiff)+";"+str(distance)+";"+str(random.choice(LOC)))
+                    previousDate = fullDate
+                    sec = random.randint(sec+1,60)
+                min = random.randint(min+1,60)
+            hour = random.randint(hour+1,24)
+        date = date + timedelta(days=1)
+    return df
+

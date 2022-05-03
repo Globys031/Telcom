@@ -4,19 +4,28 @@
 # And feed it to the below algorithm
 
 
-##### Libraries
+#####
+# # Libraries
 from sklearn.datasets import make_blobs
 from numpy import quantile, random, where
 from sklearn.ensemble import IsolationForest
 import matplotlib.pyplot as plt
+#####
 
-##### Additional files
+#####
+# # Additional files
 from AnomalyDetection import anomalyDetection
+from DataGenerator import dataGenerator
+#####
 
 
-###### Sample input, change later.
-random.seed(3)
-X, _ = make_blobs(n_samples=300, centers=1, cluster_std=.3, center_box=(20, 5))
-print(X)
-anomalyDetection.drawAnomalyGraph(X, _)
+#####
+# # Main code
+
+df = dataGenerator.randomData()
+
+anomalyDetector = anomalyDetection.AnomalyDetector(df)
+outlier_indexes = anomalyDetector.findAnomalies()
+anomalyDetector.drawAnomalies(outlier_indexes)
+
 ######
