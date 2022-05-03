@@ -9,7 +9,7 @@ def randomData():
     startDay = 15
     zone = 3
 
-    numOfDaysToGenerateData = 20
+    numOfDaysToGenerateData = 5
     generateRandomDate = False;
 
     date = dt.date(startYear, startMonth, startDay)
@@ -30,7 +30,6 @@ def randomData():
     for i in range(numOfDaysToGenerateData):
         # generate random time of the day
         hour = 1
-        previousDate = -1
         while hour < 24:
             min = 0
             while min < 59:
@@ -42,23 +41,23 @@ def randomData():
                     if previousDate == -1:
                         dateDiff = 0
                     else:
-                        dateDiff = fullDate - previousDate   
-
+                        dateDiff = int((fullDate - previousDate).total_seconds())   
+                    
                     distance=random.randint(1,14)
 
                     # If possible we'll group data by the minute (look at "time" column).
                     df = df.append({'time' : min + hour * 60, 
                                     'bytes' : random.choice(bytes), 
-                                    'last_location' : int(dateDiff.total_seconds()),  
+                                    'last_location' : dateDiff,  
                                     'travel_distance' : distance,  
                                     'LAC' : random.choice(LAC), }, ignore_index = True)
 
                     #print(str(fullDate.strftime("%Y-%m-%dT%H:%M:%S%z"))+";"+str(random.choice(bytes)
-                                                                                )+";"+str(dateDiff)+";"+str(distance)+";"+str(random.choice(LOC)))
+                                                                              # )+";"+str(dateDiff)+";"+str(distance)+";"+str(random.choice(LOC)))
                     previousDate = fullDate
                     sec = random.randint(sec+1,60)
                 min = random.randint(min+1,60)
             hour = random.randint(hour+1,24)
-        date = date + timedelta(days=1)
+        date = date + timedelta(days=1)       
     return df
 
