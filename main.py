@@ -25,7 +25,13 @@ from DataGenerator import dataGenerator
 df = dataGenerator.randomData()
 
 anomalyDetector = anomalyDetection.AnomalyDetector(df)
-outlier_indexes = anomalyDetector.findAnomalies()
-anomalyDetector.drawAnomalies(outlier_indexes)
+
+# # Draws a graph of anomalies for all columns
+# TO DO: get rid of the error when these two are uncommented
+#anomaly_indexes = anomalyDetector.getAnomalyIndexes()
+#anomalyDetector.drawAnomaliesAllColumns(anomaly_indexes)
+
+# Goes further in as to why each data point is an anomaly
+anomalyDetector.identifyAnomalies()
 
 ######

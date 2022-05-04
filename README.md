@@ -1,3 +1,14 @@
 # Telcom
 
-For starters I've created 3 files to help separate our tasks. I expect that they'll be overwritten/deleted/moved to a different folder so do whatever you want with them as they're empty anyway.
+Requires python 3.0 and up, and multiple modules installed:
+```
+pip install nbformat numpy pandas matplotlib sklearn warnings
+```
+
+### How data is portrayed in the table:
+
+- gray - not an anomaly
+- yellow - a small anomaly (can be safely ignored)
+- red - anomaly
+
+As for the graph, both the yellow (insignifcant) and the red anomalies are portrayed as red

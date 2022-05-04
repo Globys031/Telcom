@@ -10,7 +10,7 @@ def randomData():
     zone = 3
 
     numOfDaysToGenerateData = 5
-    generateRandomDate = False;
+    generateRandomDate = False
 
     date = dt.date(startYear, startMonth, startDay)
 
@@ -19,7 +19,7 @@ def randomData():
 
     df = pd.DataFrame()
     # Initialize empty dataframe
-    for column in [ "time", "bytes", "last_location", "travel_distance", "LAC" ]:
+    for column in [ "load_date", "time", "bytes", "last_location", "travel_distance", "LAC" ]:
         df[column] = ""
 
     # generate random time of the day
@@ -46,7 +46,8 @@ def randomData():
                     distance=random.randint(1,14)
 
                     # If possible we'll group data by the minute (look at "time" column).
-                    df = df.append({'time' : min + hour * 60, 
+                    df = df.append({'load_date' : date,
+                                    'time' : min + hour * 60, 
                                     'bytes' : random.choice(bytes), 
                                     'last_location' : dateDiff,  
                                     'travel_distance' : distance,  
