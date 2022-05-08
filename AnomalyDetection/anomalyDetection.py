@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import warnings
 
-from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+from plotly.offline import download_plotlyjs, init_notebook_mode, plot, plot
 import plotly.graph_objs as go
 
 ###########
@@ -199,5 +199,5 @@ class AnomalyDetector:
             yaxis1=dict(axis, **dict(domain=[2 * 0.21 + 0.20, 1], anchor='x1', hoverformat='.2f')))
     fig = go.Figure(data=[table, anomalies_map, Actuals], layout=layout)
 
-    iplot(fig)
+    plot(fig)
   

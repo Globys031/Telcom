@@ -10,7 +10,8 @@ def randomData():
     zone = 3
 
     numOfDaysToGenerateData = 5
-    generateRandomDate = False
+    minDifferenceBetweenDays = 1
+    maxnDifferenceBetweenDays = 5
 
     date = dt.date(startYear, startMonth, startDay)
 
@@ -59,6 +60,6 @@ def randomData():
                     sec = random.randint(sec+1,60)
                 min = random.randint(min+1,60)
             hour = random.randint(hour+1,24)
-        date = date + timedelta(days=1)       
+        date = date + timedelta(days=random.randint(minDifferenceBetweenDays, maxnDifferenceBetweenDays))       
     return df
 
