@@ -47,12 +47,12 @@ def randomData():
                     distance=random.randint(1,14)
 
                     # If possible we'll group data by the minute (look at "time" column).
-                    df = df.append({'load_date' : date,
+                    df = pd.concat([df, pd.DataFrame.from_records([{'load_date' : date,
                                     'time' : min + hour * 60, 
                                     'bytes' : random.choice(bytes), 
                                     'last_location' : dateDiff,  
                                     'travel_distance' : distance,  
-                                    'LAC' : random.choice(LAC), }, ignore_index = True)
+                                    'LAC' : random.choice(LAC), }])], ignore_index = True)
 
                     #print(str(fullDate.strftime("%Y-%m-%dT%H:%M:%S%z"))+";"+str(random.choice(bytes)
                                                                               # )+";"+str(dateDiff)+";"+str(distance)+";"+str(random.choice(LOC)))
