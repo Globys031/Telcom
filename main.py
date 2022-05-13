@@ -22,7 +22,8 @@ from DataGenerator import dataGenerator
 #####
 # # Main code
 
-df = dataGenerator.randomData()
+df = dataGenerator.randomData(startYear=2022, startMonth=5, startDay=10, zone=3,
+               numOfDaysToGenerateData=10, minDifferenceBetweenDays=1, maxDifferenceBetweenDays=5)
 
 anomalyDetector = anomalyDetection.AnomalyDetector(df)
 
