@@ -34,7 +34,7 @@ def randomData(startYear=2022, startMonth=2, startDay=15, zone=3,
                                            hour, min, sec, tzinfo=timezone(timedelta(hours=zone)))
 
                     if previousDate == -1:
-                        dateDiff = 0
+                        dateDiff = 1 # If set to 0, the program will crash due to DivisionByZero exception
                     else:
                         dateDiff = int(
                             (fullDate - previousDate).total_seconds())
@@ -43,14 +43,12 @@ def randomData(startYear=2022, startMonth=2, startDay=15, zone=3,
 
                     # If possible we'll group data by the minute (look at "time" column).
                     df = pd.concat([df, pd.DataFrame.from_records([{'load_date': date,
-                                    'time': min + hour * 60,
+                                                                    'time': min + hour * 60,
                                                                     'bytes': random.choice(bytes),
                                                                     'last_location': dateDiff,
                                                                     'travel_distance': distance,
                                                                     'LAC': random.choice(LAC), }])], ignore_index=True)
 
-                    # print(str(fullDate.strftime("%Y-%m-%dT%H:%M:%S%z"))+";"+str(random.choice(bytes)
-                    # )+";"+str(dateDiff)+";"+str(distance)+";"+str(random.choice(LOC)))
                     previousDate = fullDate
                     sec = random.randint(sec+1, 60)
                 min = random.randint(min+1, 60)
