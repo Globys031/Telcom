@@ -11,6 +11,9 @@ from numpy import quantile, random, where
 from sklearn.ensemble import IsolationForest
 import matplotlib.pyplot as plt
 import dash
+import random
+import pandas as pd
+import numpy as np
 #####
 
 #####
@@ -25,10 +28,15 @@ from DataGenerator import dataGenerator
 
 # app = dash.Dash(__name__)
 
-df = dataGenerator.randomData(startYear=2022, startMonth=5, startDay=10, zone=3,
-               numOfDaysToGenerateData=10, minDifferenceBetweenDays=1, maxDifferenceBetweenDays=5)
+numOfDaysForData = 20
+numOfDaysForAnomaliesData = 2
 
-anomalyDetector = anomalyDetection.AnomalyDetector(df)
+data = dataGenerator.randomData(startYear=2022, startMonth=5, startDay=10, zone=3,
+                                     minDiffBetweenDays=1, maxDiffBetweenDays=10, 
+                                     minDiffBetweenMins=1, maxDiffBetweenMins=480, 
+                                     numOfDays=numOfDaysForData)
+                                    
+anomalyDetector = anomalyDetection.AnomalyDetector(data)
 
 # anomalyDetector = anomalyDetection.AnomalyDetector(df, app)
 # anomalyDetector.plotAnomaliesLive()
