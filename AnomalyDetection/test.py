@@ -12,6 +12,11 @@ X.append(1)
 Y = deque(maxlen=20)
 Y.append(1)
 
+ALLOWED_TYPES = (
+    "text", "number", "password", "email", "search",
+    "tel", "url", "range", "hidden",
+)
+
 
 app = dash.Dash(__name__)
 app.layout = html.Div(
@@ -21,7 +26,8 @@ app.layout = html.Div(
             id='graph-update',
             interval=1*1000, # in miliseconds
             n_intervals=0
-        ),
+        )
+        for _ in ALLOWED_TYPES
     ]
 )
 
@@ -30,6 +36,8 @@ app.layout = html.Div(
     Input(component_id='graph-update', component_property='n_intervals')
 ) # '@' simbolis nurodo kad naudojamas zemiau esantis metodas
 def update_graph_scatter(self):
+    print("test")
+
     X.append(X[-1]+1)
     Y.append(Y[-1]+Y[-1]*random.uniform(-0.1,0.1))
 
