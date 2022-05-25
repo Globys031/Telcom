@@ -5,9 +5,10 @@ import pandas as pd
 
 
 def randomData(startYear=2022, startMonth=2, startDay=15, zone=3,
-               numOfDaysToGenerateData=5, minDifferenceBetweenDays=1, maxDifferenceBetweenDays=5):
+               numOfDays=5, minDiffBetweenDays=1, maxDiffBetweenDays=5, minDiffBetweenMins=1, maxDiffBetweenMins=10):
 
-    date = dt.date(startYear, startMonth, startDay)
+    fullDate = dt.datetime(startYear, startMonth, startDay, 0,
+                           1, 0, tzinfo=timezone(timedelta(hours=zone)))
 
     bytes = [246, 210]
     LAC = [9321, 8138, 8193]
@@ -18,42 +19,42 @@ def randomData(startYear=2022, startMonth=2, startDay=15, zone=3,
         df[column] = ""
 
     # generate random time of the day
-    hour = 1
+ 
     previousDate = -1
 
-    # Generate date
-    for i in range(numOfDaysToGenerateData):
-        # generate random time of the day
-        hour = 1
-        while hour < 24:
-            min = 0
-            while min < 59:
-                sec = 0
-                while sec < 59:
-                    fullDate = dt.datetime(date.year, date.month, date.day,
-                                           hour, min, sec, tzinfo=timezone(timedelta(hours=zone)))
+    for i in range(numOfDays):
+        fullDate = dt.datetime(fullDate.year, fullDate.month, fullDate.day, 0,
+                               1, 0, tzinfo=timezone(timedelta(hours=zone)))
 
-                    if previousDate == -1:
-                        dateDiff = 1 # If set to 0, the program will crash due to DivisionByZero exception
-                    else:
-                        dateDiff = int(
-                            (fullDate - previousDate).total_seconds())
+        maxTime = dt.datetime(fullDate.year, fullDate.month, fullDate.day, 23,
+                              59, 59, tzinfo=timezone(timedelta(hours=zone)))
+        # Iterate time
+        while(True):
+            if previousDate == -1:
+                dateDiff = 1  # If set to 0, the program will crash due to DivisionByZero exception
+            else:
+                dateDiff = int((fullDate - previousDate).total_seconds())
 
-                    distance = random.randint(1, 14)
+            distance = random.randint(1, 14)
 
-                    # If possible we'll group data by the minute (look at "time" column).
-                    df = pd.concat([df, pd.DataFrame.from_records([{'load_date': date,
-                                                                    'time': min + hour * 60,
-                                                                    'bytes': random.choice(bytes),
-                                                                    'last_location': dateDiff,
-                                                                    'travel_distance': distance,
-                                                                    'LAC': random.choice(LAC), }])], ignore_index=True)
+            df = pd.concat([df, pd.DataFrame.from_records([{'load_date': fullDate.date(),
+                                                            'time': fullDate.minute + fullDate.hour * 60,
+                                                            'bytes': random.choice(bytes),
+                                                            'last_location': dateDiff,
+                                                            'travel_distance': distance,
+                                                            'LAC': random.choice(LAC), }])], ignore_index=True)
+            previousDate = fullDate
 
-                    previousDate = fullDate
-                    sec = random.randint(sec+1, 60)
-                min = random.randint(min+1, 60)
-            hour = random.randint(hour+1, 24)
-        date = date + \
+            tempFullDate = fullDate + timedelta(minutes=random.randint(
+                minDiffBetweenMins, maxDiffBetweenMins))
+            if(tempFullDate < maxTime):
+                fullDate = tempFullDate
+            else:
+                break
+
+           
+        fullDate = fullDate + \
             timedelta(days=random.randint(
-                minDifferenceBetweenDays, maxDifferenceBetweenDays))
+                minDiffBetweenDays, maxDiffBetweenDays))
+
     return df
