@@ -6,7 +6,6 @@ import pandas as pd
 
 def randomData(startYear=2022, startMonth=2, startDay=15, zone=3,
                numOfDays=5, minDiffBetweenDays=1, maxDiffBetweenDays=5, minDiffBetweenMins=1, maxDiffBetweenMins=10):
-
     fullDate = dt.datetime(startYear, startMonth, startDay, 0,
                            1, 0, tzinfo=timezone(timedelta(hours=zone)))
 
