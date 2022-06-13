@@ -1,5 +1,6 @@
 #####
 # # Libraries
+import sys
 from sklearn.datasets import make_blobs
 from numpy import quantile, random, where
 from sklearn.ensemble import IsolationForest
@@ -16,7 +17,15 @@ from AnomalyDetection import anomalyDetection, anomalyIllustrator, config
 #####
 
 if __name__ == '__main__':
-	live_mode = True
+	live_mode = False
+
+	if len(sys.argv) > 1:
+		if(sys.argv[1] == "live"):
+			live_mode = True
+
+
+
+	print("live ",live_mode)
 
 	# config.df is a global variables that will is necessary to draw data live
 	config.df = dataGenerator.randomData(startYear=2022, startMonth=5, startDay=10, zone=3,
