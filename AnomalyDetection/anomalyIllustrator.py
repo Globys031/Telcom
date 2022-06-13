@@ -6,15 +6,11 @@ from numpy import quantile, random, where
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-import warnings
 
 from plotly.offline import download_plotlyjs, init_notebook_mode, plot
-import dash
-from dash.dependencies import Output, Input, State
+from dash.dependencies import Output, Input
 from dash import dcc
 from dash import html
-import plotly
-import random
 import plotly.graph_objs as go
 from collections import deque
 
@@ -26,13 +22,6 @@ from AnomalyDetection import config
 # The rest of the code goes by each column and further defines why each column's data
 # can be considered an anomaly.
 ###########
-
-X = deque(maxlen=20)
-X.append(1)
-Y = deque(maxlen=20)
-Y.append(1)
-
-
 
 def drawAnomaliesAllColumns(outlier_indexes):
   # PCA is primarily used for dimensionality reduction (basically allows to display multiple columns in 2D)
@@ -146,11 +135,7 @@ def plotAnomaliesLive():
       Input(component_id='graph-update', component_property='n_intervals'),
   ) # '@' being used, meaning that the below method is used for callback
   def update_graph_scatter(n_intervals):
-  # def update_graph_scatter(n_intervals, df):
-      print(config.df)
       dates = config.df['load_date']
-
-      print(config.df['anomaly'])
 
       # identify anomaly points and create an array of anomaly's values for plot
       bool_array = (abs(config.df['anomaly']) > 0)
@@ -161,6 +146,27 @@ def plotAnomaliesLive():
 
       #A dictionary for conditional format table based on anomaly
       color_map = {0: "gray", 1: "yellow", 2: "red"}
+
+      #Table which includes Date,Actuals(dataGenerator values),Change occured from previous point
+      # https://plotly.com/python/table/
+      table = go.Table(
+          domain=dict(x=[0, 1],
+                      y=[0, 0.55]),
+          columnwidth=[5, 2, 3],
+          header=dict(height=20,
+                      values=[['<b>Date</b>'], ['<b>Actual Values </b>'], ['<b>% Change </b>'],
+                              ],
+                      font=dict(color=['rgb(45,45,45)'] * 5, size=14),
+                      fill=dict(color='#d562be')), #bet issiaiskinau kad tikrai sita vieta jam nepatinka
+          cells=dict(values=[config.df.round(3)[k].tolist() for k in ['load_date', 'actuals', 'percentage_change']],
+                      line=dict(color='#506784'),
+                      align=['center'] * 5,
+                      font=dict(color=['rgb(40,40,40)'] * 5, size=12),
+                      suffix=[None] + [''] + [''] + ['%'] + [''],
+                      height=27,
+                      fill=dict(color=[config.df['anomaly'].map(color_map)],#map based on anomaly level from dictionary
+                      )
+                      ))
       
       # Plot the actuals (datagenerator data) scatter points
       Actuals = go.Scatter(name='Actuals',
@@ -196,44 +202,11 @@ def plotAnomaliesLive():
               width=1000,
               height=865,
               autosize=False,
-              title="<metric name here>",
+              title=config.metric_name,
               margin=dict(t=75),
               showlegend=True,
               xaxis1=dict(axis, **dict(domain=[0, 1], anchor='y1', showticklabels=True)),
               yaxis1=dict(axis, **dict(domain=[2 * 0.21 + 0.20, 1], anchor='x1', hoverformat='.2f')))
-      # fig = go.Figure(data=[anomalies_map, Actuals], layout=layout)
 
-      return {'data': [anomalies_map, Actuals],'layout' : go.Layout(layout)}
-
-      # print(df)
-
-      # X.append(X[-1]+1)
-      # Y.append(Y[-1]+Y[-1]*random.uniform(-0.1,0.1))
-
-      # data = go.Scatter(
-      #         x=list(X),
-      #         y=list(Y),
-      #         name='Scatter',
-      #         mode= 'lines+markers'
-      #         )
-
-      # axis = dict(
-      #     showline=True,
-      #     zeroline=False,
-      #     showgrid=True,
-      #     mirror=True,
-      #     ticklen=4,
-      #     gridcolor='#ffffff',
-      #     tickfont=dict(size=10))
-
-      # layout = dict(
-      #     # width=1000,
-      #     height=400,
-      #     autosize=True,
-      #     title="test",
-      #     margin=dict(t=75),
-      #     showlegend=True,
-      #     xaxis1=dict(axis, **dict(range=[min(X),max(X)], anchor='y1', showticklabels=True)),
-      #     yaxis1=dict(axis, **dict(range=[min(Y),max(Y)], anchor='x1', hoverformat='.2f')))
-
-      # return {'data': [data],'layout' : go.Layout(layout)}
+      return {'data': [table, anomalies_map, Actuals],'layout' : go.Layout(layout)}
+      # return {'data': [anomalies_map, Actuals],'layout' : go.Layout(layout)}
