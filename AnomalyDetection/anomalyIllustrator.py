@@ -144,22 +144,6 @@ def plotAnomaliesLive():
               n_intervals=0
           ),
       ]),
-      html.Div([
-          dcc.Graph(id='live-graph-4', animate=True),
-          dcc.Interval(
-              id='graph-update-4',
-              interval=5*1000, # in miliseconds
-              n_intervals=0
-          ),
-      ]),
-      html.Div([
-          dcc.Graph(id='live-graph-5', animate=True),
-          dcc.Interval(
-              id='graph-update-5',
-              interval=5*1000, # in miliseconds
-              n_intervals=0
-          ),
-      ]),
   ])
   @config.app.callback(
       # The order in which the dependency objects are provided dictates the 
@@ -167,8 +151,6 @@ def plotAnomaliesLive():
       Output(component_id='live-graph-1', component_property='figure'),
       Output(component_id='live-graph-2', component_property='figure'),
       Output(component_id='live-graph-3', component_property='figure'),
-      Output(component_id='live-graph-4', component_property='figure'),
-      Output(component_id='live-graph-5', component_property='figure'),
       Input(component_id='graph-update-1', component_property='n_intervals'),
   ) # '@' being used, meaning that the below method is used for callback
   ###### IMPORTANT !!!

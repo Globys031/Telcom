@@ -24,34 +24,34 @@ from AnomalyDetection import anomalyDetection, anomalyIllustrator, config
 
 def task():
     while(True):
-	    config.df_orig.sort_values(by=['load_date'],ascending=False)
-	    last_row = config.df_orig.iloc[-1:]
-	    year = int(str(last_row["load_date"]).split('-')[0].split(' ')[-1])
-	    month = int(str(last_row["load_date"]).split('-')[1])
-	    day = int(str(last_row["load_date"]).split('-')[-1].split('\n')[0])
-	    gDate = datetime.datetime(year, month, day) + timedelta(days = 1)
-	    year = int(gDate.year)
-	    month = int(gDate.month)
-	    day = int(gDate.day)
-	    tempdf = dataGenerator.randomData(startYear=year, startMonth=month, startDay=day, zone=3,numOfDays=1, minDiffBetweenDays=1, maxDiffBetweenDays=1, minDiffBetweenMins=1, maxDiffBetweenMins=10)
-	    config.df_orig = pd.concat([ config.df_orig, tempdf], ignore_index=True)
-	    config.df=config.df_orig
-	    for i in range(1,len(config.df.columns)):
-		    config.dfs[i-1] = (anomalyDetection.identifyAnomaliesForColumn(model, config.df_orig, i))
-		    config.metric_name = config.df_orig.columns[i-1]
-		    config.dates[i-1] = config.dfs[i - 1]['load_date']
-		    config.bool_array[i-1] =(abs(config.dfs[i - 1]['anomaly']) > 0)
-		    config.actuals[i-1] = config.dfs[i - 1]["actuals"][-len(config.bool_array[i - 1]):]
-		    config.anomaly_points[i-1] = (config.bool_array[i - 1] * config.actuals[i - 1])
-		    config.anomaly_points[i - 1][config.anomaly_points[i - 1] == 0] = np.nan
+        config.df_orig.sort_values(by=['load_date'],ascending=False)
+        last_row = config.df_orig.iloc[-1:]
+        year = int(str(last_row["load_date"]).split('-')[0].split(' ')[-1])
+        month = int(str(last_row["load_date"]).split('-')[1])
+        day = int(str(last_row["load_date"]).split('-')[-1].split('\n')[0])
+        gDate = datetime.datetime(year, month, day) + timedelta(days = 1)
+        year = int(gDate.year)
+        month = int(gDate.month)
+        day = int(gDate.day)
+        tempdf = dataGenerator.randomData(startYear=year, startMonth=month, startDay=day, zone=3,numOfDays=1, minDiffBetweenDays=1, maxDiffBetweenDays=1, minDiffBetweenMins=1, maxDiffBetweenMins=10)
+        config.df_orig = pd.concat([ config.df_orig, tempdf], ignore_index=True)
+        config.df=config.df_orig
+        for i in range(1,len(config.df.columns)):
+            config.dfs[i-1] = (anomalyDetection.identifyAnomaliesForColumn(model, config.df_orig, i))
+            config.metric_name = config.df_orig.columns[i-1]
+            config.dates[i-1] = config.dfs[i - 1]['load_date']
+            config.bool_array[i-1] =(abs(config.dfs[i - 1]['anomaly']) > 0)
+            config.actuals[i-1] = config.dfs[i - 1]["actuals"][-len(config.bool_array[i - 1]):]
+            config.anomaly_points[i-1] = (config.bool_array[i - 1] * config.actuals[i - 1])
+            config.anomaly_points[i - 1][config.anomaly_points[i - 1] == 0] = np.nan
 		    # config_bool_array[i] = pd.concat(p)
 	        # config.bool_array.append((abs(config.dfs[i - 1]['anomaly']) > 0))
 			# config.actuals.append(config.dfs[i - 1]["actuals"][-len(config.bool_array[i - 1]):])
-	    time.sleep(60)
+        time.sleep(60)
 		
 
 if __name__ == '__main__':
-	live_mode = False
+	live_mode = True
 
 	if len(sys.argv) > 1:
 		if(sys.argv[1] == "live"):

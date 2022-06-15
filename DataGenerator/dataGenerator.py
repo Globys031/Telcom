@@ -9,12 +9,12 @@ def randomData(startYear=2022, startMonth=2, startDay=15, zone=3,
     fullDate = dt.datetime(startYear, startMonth, startDay, 0,
                            1, 0, tzinfo=timezone(timedelta(hours=zone)))
 
-    bytes = [246, 210]
-    LAC = [9321, 8138, 8193]
+    sender = [310170845466094, 470040123456789, 502130123456789, 460001357924680, 520031234567890, 313460000000001]
+    receiver = [310170845466994, 470040123456989, 502130123456989, 460001357924980, 520031234567990, 313460000000901]
 
     df = pd.DataFrame()
     # Initialize empty dataframe
-    for column in ["load_date", "time", "bytes", "last_location", "travel_distance", "LAC"]:
+    for column in ["load_date", "time", "sender", "receiver"]:
         df[column] = ""
 
     # generate random time of the day
@@ -29,19 +29,11 @@ def randomData(startYear=2022, startMonth=2, startDay=15, zone=3,
                               59, 59, tzinfo=timezone(timedelta(hours=zone)))
         # Iterate time
         while(True):
-            if previousDate == -1:
-                dateDiff = 1  # If set to 0, the program will crash due to DivisionByZero exception
-            else:
-                dateDiff = int((fullDate - previousDate).total_seconds())
-
-            distance = random.randint(1, 14)
-
             df = pd.concat([df, pd.DataFrame.from_records([{'load_date': fullDate.date(),
                                                             'time': fullDate.minute + fullDate.hour * 60,
-                                                            'bytes': random.choice(bytes),
-                                                            'last_location': dateDiff,
-                                                            'travel_distance': distance,
-                                                            'LAC': random.choice(LAC), }])], ignore_index=True)
+                                                            'sender': random.choice(sender),
+                                                            'receiver': random.choice(receiver),
+                                                            }])], ignore_index=True)
             previousDate = fullDate
 
             tempFullDate = fullDate + timedelta(minutes=random.randint(
